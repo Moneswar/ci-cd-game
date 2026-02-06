@@ -7,6 +7,12 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/satheeshm5465-aws/ci-cd-game'
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 dir('terraform') {
@@ -32,7 +38,15 @@ pipeline {
                             returnStdout: true
                         ).trim()
                     }
+                    echo "Server IP is ${SERVER_IP}"
                 }
+            }
+        }
+
+        stage('Wait for Server to be Ready') {
+            steps {
+                echo "Waiting for EC2 instance to finish booting..."
+                sh 'sleep 60'
             }
         }
 
@@ -49,6 +63,15 @@ pipeline {
                 sudo systemctl restart nginx"
                 """
             }
+        }
+    }
+
+    post {
+        success {
+            echo "🎉 Deployment Successful! Visit: http://${SERVER_IP}"
+        }
+        failure {
+            echo "❌ Pipeline Failed. Check logs above."
         }
     }
 }
