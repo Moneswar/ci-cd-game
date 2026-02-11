@@ -3,9 +3,9 @@ provider "aws" {
 }
 
 resource "aws_instance" "game_server" {
-  ami           = "ami-019715e0d74f695be" 
-  instance_type = "t3.micro"
-  key_name      = "jenkinskkp"
+  ami           = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20251212" 
+  instance_type = "t3.small"
+  key_name      = "jenkins"
 
   security_groups = [aws_security_group.game-sg-jenkins.name]
 
